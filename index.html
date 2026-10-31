@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Çeviri Pratiği</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@1,700;1,800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eaf1fb;--card:#fff;--tx:#0f1f3d;--mut:#5a6a8a;--bd:#d3dff0;--ac:#2563eb;--ac2:#1e3a8a;--ok:#16874a;--okb:#dcf5e6;--no:#c62828;--nob:#fde3e3;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#081329;--card:#0f1f3f;--tx:#e8eefb;--mut:#93a5c8;--bd:#223a66;--ac:#3b82f6;--ac2:#1e40af;--ok:#5fd68f;--okb:#17382a;--no:#ff8a8a;--nob:#432024;color-scheme:dark}}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.55}
+header{background:linear-gradient(135deg,#2563eb,#0b1f4d);color:#fff;padding:32px 20px 60px;text-align:center}
+header h1{margin:0 0 8px;font-family:"Playfair Display",Georgia,serif;font-style:italic;font-weight:800;font-size:2.6rem;letter-spacing:.5px}header p{margin:0;opacity:.9}
+main{max-width:860px;margin:-36px auto 40px;padding:0 16px}
+nav{display:flex;gap:6px;background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:6px;margin-bottom:16px}
+nav button{flex:1;border:0;background:none;color:var(--mut);padding:10px;border-radius:10px;font:inherit;font-weight:600;cursor:pointer}
+nav button.on{background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:20px;margin-bottom:16px;box-shadow:0 4px 18px rgba(60,60,120,.06)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}@media(max-width:640px){.grid{grid-template-columns:1fr}}
+label{display:block;font-weight:600;margin-bottom:6px}small{color:var(--mut)}
+textarea{width:100%;min-height:170px;resize:vertical;padding:12px;border:1px solid var(--bd);border-radius:12px;background:var(--bg);color:var(--tx);font:inherit}
+textarea:focus{outline:2px solid var(--ac);border-color:transparent}
+.go{margin-top:14px;width:100%;border:0;padding:14px;border-radius:12px;font:inherit;font-weight:700;font-size:1rem;color:#fff;background:linear-gradient(135deg,var(--ac),var(--ac2));cursor:pointer}
+.go:disabled{opacity:.6;cursor:wait}
+.err{color:var(--no);margin-top:10px}
+.score{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.ring{width:110px;height:110px;border-radius:50%;display:grid;place-items:center;font-size:2rem;font-weight:800;flex:none}
+.ring span{width:84px;height:84px;border-radius:50%;background:var(--card);display:grid;place-items:center}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;flex:1;min-width:240px}
+.stat{background:var(--bg);border-radius:12px;padding:10px;text-align:center}.stat b{display:block;font-size:1.4rem}.stat small{font-size:.78rem}
+.sent{border:1px solid var(--bd);border-radius:12px;padding:12px;margin-top:12px}
+.sent .src{color:var(--mut);font-size:.92rem;margin-bottom:6px}
+.g{background:var(--okb);color:var(--ok);border-radius:5px;padding:1px 4px}
+.r{background:var(--nob);color:var(--no);border-radius:5px;padding:1px 4px;text-decoration:line-through}
+.fix{background:var(--okb);color:var(--ok);border-radius:5px;padding:1px 4px;font-weight:600}
+.ref{margin-top:8px;font-size:.92rem}.ref b{color:var(--ok)}.note{color:var(--mut);font-size:.88rem;margin-top:4px}
+table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--bd);font-size:.93rem}th{color:var(--mut);font-weight:600}
+.pill{display:inline-block;min-width:44px;text-align:center;padding:2px 10px;border-radius:99px;font-weight:700;color:#fff}
+.hide{display:none}input#nm{width:100%;padding:12px;border:1px solid var(--bd);border-radius:12px;background:var(--bg);color:var(--tx);font:inherit;margin-bottom:14px}input#nm:focus{outline:2px solid var(--ac);border-color:transparent}.sm{display:block;margin:10px auto 0;border:1px solid var(--bd);background:none;color:var(--mut);padding:6px 14px;border-radius:8px;font:inherit;font-size:.85rem;cursor:pointer}.sm:disabled{opacity:.6;cursor:wait}#autoOut{margin:12px 0 0;background:var(--bg)}tr[data-id]:hover{background:var(--bg)}.del{border:0;background:none;cursor:pointer;font:inherit;color:var(--no)}.gen{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;margin-bottom:14px;padding:12px;background:var(--bg);border-radius:12px}.gen div{flex:1;min-width:120px}.gen select,.gen input{width:100%;padding:10px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx);font:inherit}.gen button{border:0;padding:11px 16px;border-radius:10px;font:inherit;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--ac),var(--ac2));cursor:pointer}.gen button:disabled{opacity:.6;cursor:wait}.empty{text-align:center;color:var(--mut);padding:24px}
+.tools{display:flex;justify-content:flex-end;margin-bottom:8px}.tools button{border:1px solid var(--bd);background:none;color:var(--mut);padding:6px 12px;border-radius:8px;cursor:pointer;font:inherit}
+</style>
+</head>
+<body>
+<header><h1>Çeviri Pratiği</h1><p>Paragrafı yaz, çevirini gir, yapay zekâ puanlasın.</p></header>
+<main>
+<details class="card" id="keyBox" open><summary style="cursor:pointer;font-weight:700">🔑 API anahtarı <small id="keySt"></small></summary>
+<p style="margin:10px 0"><small>Anthropic API anahtarını bir kez gir. Anahtar sadece bu tarayıcıda (localStorage) saklanır, başka yere gönderilmez; istekler doğrudan Anthropic API’sine gider. Anahtarı asla koda yazma, GitHub’a yükleme.</small></p>
+<div style="display:flex;gap:8px;flex-wrap:wrap"><input id="apiKey" type="password" placeholder="sk-ant-..." autocomplete="off" style="flex:1;min-width:200px;padding:12px;border:1px solid var(--bd);border-radius:12px;background:var(--bg);color:var(--tx);font:inherit"><button class="go" id="keySave" style="width:auto;margin:0;padding:12px 20px">Kaydet</button><button class="sm" id="keyDel" style="margin:0" type="button">Sil</button></div></details>
+<nav><button class="on" data-t="practice">✍️ Pratik</button><button data-t="rank">🏆 Sıralama</button><button data-t="hist">🕘 Geçmiş</button></nav>
+
+<section id="practice">
+<div id="form"><div class="card">
+<label for="nm">Adın</label><input id="nm" maxlength="30" placeholder="İsmini yaz" autocomplete="nickname">
+<div class="gen"><div><label for="lvl">Seviye</label><select id="lvl"><option>A1</option><option>A2</option><option selected>B1</option><option>B2</option><option>C1</option><option>C2</option><option>D1</option><option>D2</option></select></div><div><label for="lng">Paragraf dili</label><select id="lng"><option value="en">İngilizce</option><option value="tr">Türkçe</option><option value="any">Rastgele</option></select></div><div><label for="cnt">Cümle sayısı</label><input id="cnt" type="number" min="1" max="30" value="10" inputmode="numeric"></div><button id="gen" type="button">✨ Paragraf ver</button></div>
+<div class="grid">
+<div><label for="src">1) Paragraf <small>(Türkçe veya İngilizce)</small></label><textarea id="src" placeholder="Örn: Yesterday I went to the market and bought some fresh fruit."></textarea></div>
+<div><label for="usr">2) Senin çevirin <small>(karşı dil)</small></label><textarea id="usr" placeholder="Örn: Dün markete gittim ve taze meyve aldım."></textarea></div>
+</div>
+<button class="go" id="go">Değerlendir</button>
+<button class="sm" id="auto" type="button">🔁 Otomatik çevir</button><div class="card hide" id="autoOut"></div>
+<div class="err" id="err"></div>
+</div></div>
+<div id="result"></div>
+</section>
+
+<section id="rank" class="hide"><div class="card"><h3 style="margin-top:0">🏆 En yüksek puanlar</h3><div id="rankBody"></div></div></section>
+<section id="hist" class="hide"><div class="card"><div class="tools"><button id="clr">Geçmişi temizle</button></div><div id="histBody"></div></div></section>
+</main>
+
+<script>
+(function(){
+  const KK="cp-api-key",MODEL={quick:"claude-haiku-5-5",def:"claude-sonnet-5-5"};
+  const g=i=>document.getElementById(i);
+  const getKey=()=>{try{return localStorage.getItem(KK)||""}catch(e){return ""}};
+  function refresh(){const k=getKey();g("keySt").textContent=k?"· kayıtlı ✓":"· gerekli";g("keyBox").open=!k;}
+  addEventListener("DOMContentLoaded",()=>{
+    refresh();
+    g("keySave").onclick=()=>{const v=g("apiKey").value.trim();if(!v)return;try{localStorage.setItem(KK,v)}catch(e){}g("apiKey").value="";refresh()};
+    g("keyDel").onclick=()=>{try{localStorage.removeItem(KK)}catch(e){}refresh()};
+  });
+  async function ask(prompt,opts){
+    const key=getKey();
+    const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"content-type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
+      body:JSON.stringify({model:(opts&&opts.modelTier==="quick")?MODEL.quick:MODEL.def,max_tokens:4000,messages:[{role:"user",content:prompt}]})});
+    const d=await r.json().catch(()=>({}));
+    if(!r.ok){const e=new Error((d.error&&d.error.message)||("HTTP "+r.status));e.code=r.status===429?"rate_limited":"api_error";throw e}
+    return (d.content||[]).map(c=>c.text||"").join("");
+  }
+  const sample=async(p,o)=>({text:await ask(p,o)});
+  sample.json=async(p,o)=>{const t=await ask(p,o);const a=t.indexOf("{"),b=t.lastIndexOf("}");return JSON.parse(t.slice(a,b+1))};
+  window.claude={use:async n=>{if(n!=="sample")return null;if(!getKey()){const b=g("keyBox");if(b)b.open=true;return null}return sample}};
+})();
+const $=s=>document.querySelector(s);
+const KEY="ceviri-pratigi-v1";
+let attempts=[];
+try{attempts=JSON.parse(localStorage.getItem(KEY)||"[]")}catch(e){attempts=[]}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(attempts))}catch(e){}}
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const col=n=>n>=80?"#16a05a":n>=50?"#e49b0f":"#d93a3a";
+const words=t=>(t.trim().match(/[\p{L}\p{N}’'-]+/gu)||[]).length;
+
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x===b));
+  ["practice","rank","hist"].forEach(id=>$("#"+id).classList.toggle("hide",id!==b.dataset.t));
+  if(b.dataset.t==="rank")renderRank();if(b.dataset.t==="hist")renderHist();
+});
+
+function segHTML(segs){return (segs||[]).map(s=>{
+  if(s.ok)return `<span class="g">${esc(s.t)}</span>`;
+  return `<span class="r">${esc(s.t)}</span>`+(s.fix?` <span class="fix">${esc(s.fix)}</span>`:"");
+}).join(" ")}
+
+function renderResult(a){
+  const sents=a.sentences||[];
+  $("#form").classList.add("hide");$("#result").innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px"><b>👤 ${esc(a.name||"İsimsiz")}</b><button class="go" style="width:auto;margin:0;padding:10px 18px" onclick="restart()">🔄 Yeniden başla</button></div><div class="card"><div class="score">
+  <div class="ring" style="background:conic-gradient(${col(a.score)} ${a.score*3.6}deg,var(--bd) 0)"><span style="color:${col(a.score)}">${a.score}</span></div>
+  <div class="stats">
+   <div class="stat"><b>${a.srcWords}</b><small>kelime (paragraf)</small></div>
+   <div class="stat"><b>${sents.length}</b><small>cümle</small></div>
+   <div class="stat"><b style="color:var(--ok)">${a.correct}/${sents.length}</b><small>doğru çevrilen cümle</small></div>
+   <div class="stat"><b>${a.usrWords}</b><small>kelime (çevirin)</small></div>
+  </div></div>
+  <p style="margin:14px 0 0"><span class="g">doğru</span> <span class="r">hatalı</span> <span class="fix">doğrusu</span> · ${esc(a.dir)}</p></div>
+  <div class="card"><h3 style="margin-top:0">✅ Tam doğru çeviri</h3><p style="margin:0">${sents.map(s=>`<span class="g">${esc(s.reference)}</span>`).join(" ")}</p></div>
+  <div class="card"><h3 style="margin-top:0">✍️ Senin çevirin</h3><p style="margin:0">${sents.map(s=>segHTML(s.segments)).join(" ")}</p></div>
+  ${sents.map((s,i)=>`<div class="card sent" style="margin-bottom:0">
+   <div class="src"><b>${i+1}.</b> ${esc(s.source)}</div>
+   <div>${segHTML(s.segments)}</div>
+   <div class="ref"><b>Doğru çeviri:</b> ${esc(s.reference)}</div>
+   ${s.note?`<div class="note">💡 ${esc(s.note)}</div>`:""}</div>`).join("")}<button class="go" onclick="restart()">🔄 Yeniden başla</button>`;
+}
+
+function renderRank(){
+  const top=[...attempts].sort((a,b)=>b.score-a.score||b.id-a.id).slice(0,15);
+  $("#rankBody").innerHTML=top.length?`<table><tr><th>#</th><th>İsim</th><th>Puan</th><th>Yön</th><th>Doğru cümle</th><th>Tarih</th><th></th></tr>${top.map((a,i)=>`<tr data-id="${a.id}" style="cursor:pointer"><td>${["🥇","🥈","🥉"][i]||i+1}</td><td><b>${esc(a.name||"İsimsiz")}</b></td><td><span class="pill" style="background:${col(a.score)}">${a.score}</span></td><td>${esc(a.dir)}</td><td>${a.correct}/${a.sentences.length}</td><td>${new Date(a.id).toLocaleDateString("tr-TR")}</td><td><button class="del" data-del="${a.id}" title="Sil">❌</button></td></tr>`).join("")}</table>`:`<div class="empty">Henüz deneme yok.</div>`;
+bindOpen("#rankBody");bindDel("#rankBody",renderRank);}
+function renderHist(){
+  const l=[...attempts].sort((a,b)=>b.id-a.id);
+  $("#histBody").innerHTML=l.length?l.map(a=>`<div class="sent"><div style="display:flex;justify-content:space-between;gap:8px"><small><b>${esc(a.name||"İsimsiz")}</b> · ${new Date(a.id).toLocaleString("tr-TR")} · ${esc(a.dir)} · ${a.srcWords} kelime</small><span class="pill" style="background:${col(a.score)}">${a.score}</span></div><div class="src" style="margin-top:6px">${esc(a.src.slice(0,160))}${a.src.length>160?"…":""}</div><button class="tools" style="border:0;background:none;color:var(--ac);cursor:pointer;padding:0;font:inherit" data-id="${a.id}">Detayı göster</button> <button class="del" data-del="${a.id}" title="Sil">❌ Sil</button></div>`).join(""):`<div class="empty">Henüz deneme yok.</div>`;
+  bindDel("#histBody",renderHist);document.querySelectorAll("#histBody [data-id]").forEach(b=>b.onclick=()=>{
+    const a=attempts.find(x=>x.id==b.dataset.id);renderResult(a);
+    document.querySelector('nav button[data-t="practice"]').click();window.scrollTo({top:0,behavior:"smooth"});
+  });
+}
+function openAttempt(id){const a=attempts.find(x=>x.id==id);if(!a)return;renderResult(a);document.querySelector('nav button[data-t="practice"]').click();window.scrollTo({top:0,behavior:"smooth"})}
+function bindOpen(sel){document.querySelectorAll(sel+" [data-id]").forEach(el=>el.onclick=()=>openAttempt(el.dataset.id))}
+function restart(){$("#src").value="";$("#usr").value="";$("#err").textContent="";$("#result").innerHTML="";$("#autoOut").classList.add("hide");$("#form").classList.remove("hide");window.scrollTo({top:0,behavior:"smooth"})}
+try{$("#nm").value=localStorage.getItem("cp-name")||""}catch(e){}
+function bindDel(sel,re){document.querySelectorAll(sel+" [data-del]").forEach(b=>b.onclick=e=>{e.stopPropagation();if(!b.dataset.arm){b.dataset.arm=1;const o=b.innerHTML;b.innerHTML="Emin misin? ❌";setTimeout(()=>{if(b.isConnected){delete b.dataset.arm;b.innerHTML=o}},3000);return}attempts=attempts.filter(x=>String(x.id)!==b.dataset.del);save();re()})}
+const TOPICS=["daily routine","travel","food and cooking","technology","health","friendship","nature and weather","school and work","city life","hobbies","family","shopping","history","science","culture and art","sports","the environment","a short story"];
+$("#gen").onclick=async()=>{
+  $("#err").textContent="";
+  const sample=await claude.use("sample");
+  if(!sample){$("#err").textContent="Paragraf üretimi şu an kullanılamıyor (önce yukarıya API anahtarını gir).";return}
+  const lvl=$("#lvl").value;const n=Math.max(1,Math.min(30,parseInt($("#cnt").value)||10));$("#cnt").value=n;let l=$("#lng").value;if(l==="any")l=Math.random()<.5?"en":"tr";
+  const lang=l==="en"?"English":"Turkish",topic=TOPICS[Math.floor(Math.random()*TOPICS.length)];
+  const btn=$("#gen");btn.disabled=true;btn.textContent="Hazırlanıyor…";
+  const prompt=`Write ONE paragraph in ${lang} for a language learner at CEFR level ${lvl} (A1 = very basic, C2 = near-native; D1 = literary/academic with idioms and complex syntax beyond C2; D2 = the most demanding: rare vocabulary, nuanced idioms, long complex sentences). Topic: ${topic}. Exactly ${n} sentence${n>1?"s":""}, natural and coherent, vocabulary and grammar matching the level. Return ONLY JSON: {"text":"the paragraph"}`;
+  try{
+    const r=await sample.json(prompt,{modelTier:"quick",cache:false});
+    $("#src").value=String(r.text||"").trim();$("#usr").value="";$("#usr").focus();
+  }catch(e){$("#err").textContent="Paragraf üretilemedi: "+(e&&e.message||"")}
+  btn.disabled=false;btn.textContent="✨ Paragraf ver";
+};
+$("#auto").onclick=async()=>{
+  const src=$("#src").value.trim(),out=$("#autoOut");$("#err").textContent="";
+  if(!src){$("#err").textContent="Önce paragrafı yaz.";return}
+  const sample=await claude.use("sample");
+  if(!sample){$("#err").textContent="Otomatik çeviri şu an kullanılamıyor (önce yukarıya API anahtarını gir).";return}
+  const b=$("#auto");b.disabled=true;b.textContent="Çevriliyor…";
+  try{
+    const r=await sample.json(`Detect whether the text is English or Turkish and translate it accurately and naturally into the other language. Return ONLY JSON: {"dir":"İngilizce → Türkçe" or "Türkçe → İngilizce","translation":"the full translation"}\n\nTEXT:\n${src}`,{modelTier:"default",cache:false});
+    out.classList.remove("hide");out.innerHTML=`<small>${esc(r.dir)} · otomatik çeviri</small><p style="margin:8px 0 0"><span class="g">${esc(r.translation)}</span></p>`;
+  }catch(e){$("#err").textContent="Çeviri yapılamadı: "+(e&&e.message||"")}
+  b.disabled=false;b.textContent="🔁 Otomatik çevir";
+};
+$("#clr").onclick=()=>{const b=$("#clr");if(!b.dataset.arm){b.dataset.arm=1;b.textContent="Emin misin? Tekrar bas";setTimeout(()=>{delete b.dataset.arm;b.textContent="Geçmişi temizle"},3000);return}delete b.dataset.arm;b.textContent="Geçmişi temizle";attempts=[];save();renderHist()};
+
+$("#go").onclick=async()=>{
+  const src=$("#src").value.trim(),usr=$("#usr").value.trim(),name=$("#nm").value.trim();
+  $("#err").textContent="";
+  if(!name){$("#err").textContent="Lütfen önce adını yaz.";return}
+  if(!src||!usr){$("#err").textContent="Lütfen iki alanı da doldur.";return}
+  try{localStorage.setItem("cp-name",name)}catch(e){}
+  const sample=await claude.use("sample");
+  if(!sample){$("#err").textContent="Değerlendirme şu an kullanılamıyor (önce yukarıya API anahtarını gir).";return}
+  const btn=$("#go");btn.disabled=true;btn.textContent="Değerlendiriliyor…";
+  const prompt=`You are a strict but fair English-Turkish translation teacher. The learner wrote a SOURCE paragraph (English or Turkish) and their own TRANSLATION into the other language. Split the SOURCE into sentences. For each, compare the learner's translation of that sentence with a correct translation. Return ONLY JSON, no markdown:
+{"dir":"İngilizce → Türkçe" or "Türkçe → İngilizce","score":integer 0-100 (overall accuracy),"sentences":[{"source":"source sentence","segments":[{"t":"chunk of the LEARNER's translation, in order, covering all of it","ok":true/false,"fix":"correct replacement if ok is false (empty string if the chunk should simply be deleted)"}],"reference":"a correct translation of the sentence","correct":true if the learner's sentence is essentially correct (minor typos ok),"note":"short explanation in Turkish of the mistakes, or empty"}]}
+Chunks should be words or short phrases; mark wrong words, wrong grammar, missing or mistranslated parts as ok:false. If a source sentence was not translated at all, use one segment with t:"(çevrilmemiş)", ok:false, fix: correct translation.
+SOURCE:
+${src}
+LEARNER TRANSLATION:
+${usr}`;
+  try{
+    const r=await sample.json(prompt,{modelTier:"default",cache:false});
+    const sents=Array.isArray(r.sentences)?r.sentences:[];
+    const a={id:Date.now(),name,dir:r.dir||"",score:Math.max(0,Math.min(100,Math.round(r.score||0))),src,usr,srcWords:words(src),usrWords:words(usr),sentences:sents,correct:sents.filter(s=>s.correct).length};
+    attempts.push(a);save();renderResult(a);
+    $("#result").scrollIntoView({behavior:"smooth"});
+  }catch(e){$("#err").textContent="Bir hata oluştu: "+(e&&e.message||"")+(e&&e.code==="rate_limited"?" (Çok fazla istek, biraz bekle.)":"")}
+  btn.disabled=false;btn.textContent="Değerlendir";
+};
+</script>
+</body>
+</html>
