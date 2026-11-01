@@ -12,9 +12,9 @@ app = FastAPI(title="Pratik Çeviri API", version="2.0.0")
 # ALLOWED_ORIGINS örn: https://kullaniciadi.github.io  (birden fazlaysa virgülle ayır)
 API_KEY = os.environ.get("GEMINI_API_KEY", "")
 ORIGINS = [o.strip() for o in os.environ.get("ALLOWED_ORIGINS", "*").split(",") if o.strip()]
-MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
+MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.8-flash")
 
-client = genai.Client(api_key=API_KEY)
+client = genai.Client(api_key=API_KEY) if API_KEY else None
 
 app.add_middleware(
     CORSMiddleware,
@@ -22,6 +22,32 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+_think_ok = True
+
+
+def run_model(prompt, **cfg):
+    """Düşünme (thinking) süresini kapatarak hızlı cevap ister.
+    Model bu ayarı desteklemiyorsa otomatik olarak ayarsız tekrar dener."""
+    global _think_ok
+
+    def call(think):
+        c = dict(cfg)
+        if think:
+            c["thinking_config"] = types.ThinkingConfig(thinking_budget=0)
+        return client.models.generate_content(
+            model=MODEL, contents=prompt, config=types.GenerateContentConfig(**c)
+        )
+
+    if _think_ok:
+        try:
+            return call(True)
+        except Exception as e:
+            if "thinking" not in str(e).lower():
+                raise
+            _think_ok = False
+    return call(False)
 
 
 @app.get("/")
@@ -36,15 +62,10 @@ class AskBody(BaseModel):
 
 @app.post("/ask")
 def ask(body: AskBody):
+    if client is None:
+        raise HTTPException(status_code=500, detail="GEMINI_API_KEY ayarlanmamış.")
     try:
-        r = client.models.generate_content(
-            model=MODEL,
-            contents=body.prompt,
-            config=types.GenerateContentConfig(
-                temperature=0.2,
-                response_mime_type="application/json",
-            ),
-        )
+        r = run_model(body.prompt, temperature=0.2, response_mime_type="application/json")
         return {"text": r.text}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Gemini API hatası: {str(e)}")
@@ -67,16 +88,15 @@ def generate_paragraph(
 ):
     if level.upper() not in ["A1", "A2", "B1", "B2", "C1", "C2"]:
         raise HTTPException(status_code=400, detail="Geçersiz seviye.")
+    if client is None:
+        raise HTTPException(status_code=500, detail="GEMINI_API_KEY ayarlanmamış.")
     try:
-        response = client.models.generate_content(
-            model=MODEL,
-            contents=f"Write a paragraph about '{topic}', CEFR level {level.upper()}, exactly {sentences} short sentences.",
-            config=types.GenerateContentConfig(
-                system_instruction="Return the English paragraph and its exact Turkish translation with the same number of sentences.",
-                response_mime_type="application/json",
-                response_schema=ParagraphResponse,
-                temperature=0.6,
-            ),
+        response = run_model(
+            f"Write a paragraph about '{topic}', CEFR level {level.upper()}, exactly {sentences} short sentences.",
+            system_instruction="Return the English paragraph and its exact Turkish translation with the same number of sentences.",
+            response_mime_type="application/json",
+            response_schema=ParagraphResponse,
+            temperature=0.6,
         )
         return json.loads(response.text)
     except Exception as e:
